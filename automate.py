@@ -4,13 +4,14 @@ from selenium import webdriver
 import pyautogui
 
 # Based URL for UMass Boston zoom meetings.
-zoomUrl = 'https://umassboston.zoom.us/j/'
+# zoomUrl = 'https://umassboston.zoom.us/j/'
+zoomUrl = 'https://us02web.zoom.us/j/'
 targetClass = str(input('Enter your class: ' ))
 
 foundClass = False
 meetingId = ''
 meetingPassword = ''
-
+# print(time.now())
 # Read through the csv file and extract the meeting Id and the password
 with open('class.txt') as classList:
     classes = csv.reader(classList, delimiter=',')
@@ -24,17 +25,23 @@ with open('class.txt') as classList:
 
 if foundClass:
     zoomUrl += f'{meetingId}#success'
-    driver = webdriver.Chrome('./chromedriver.exe')
-    # Opens Chrome browser
+    driver = webdriver.Chrome('B/chromedriver.exe')
+    # Opens Chrome browser and go to Zoom link
     driver.get(zoomUrl)
-    # Click the launched meeting button, opens up Zoom
-    launch = driver.find_element_by_class_name('_1FvRrPS6').click()
-    time.sleep(5)
+    driver.find_element_by_class_name('_1FvRrPS6').click()
+    time.sleep(1)
+    #Locate Open Zoom Button
+    btn = pyautogui.locateOnScreen("Buttons/zoom_meeting_btn.png")
+    pyautogui.moveTo(btn)
+    pyautogui.click()
+    # Closes the browser
     driver.quit()
     # Types the password in the Zoom application
     pyautogui.write(meetingPassword)
-    # Clicks join meeting button
-    pyautogui.click(x=960, y=650)
-    # Closes the browser
+    time.sleep(1)
+    # Locate Join Meeting Buttton
+    btn = pyautogui.locateOnScreen("Buttons/join_meeting_btn.png")
+    pyautogui.moveTo(btn)
+    pyautogui.click()
 else:
     print(f'{targetClass} was not found in the file. Please check if you typed in the current ')
